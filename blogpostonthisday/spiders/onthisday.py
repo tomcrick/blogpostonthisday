@@ -1,6 +1,5 @@
-import time
+import dateutil.parser
 from datetime import date
-from calendar import monthrange
 from scrapy.spiders import CrawlSpider
 
 class OnThisDaySpider(CrawlSpider):
@@ -20,7 +19,6 @@ class OnThisDaySpider(CrawlSpider):
     for year in range(startyear, nextyear):
         start_urls.append(url_string.format(year=year, month=today.month))
 
-
     # grab info on individual blog posts from this month's summary page
     def parse(self, response):
         
@@ -31,11 +29,12 @@ class OnThisDaySpider(CrawlSpider):
             URL_SELECTOR = 'a::attr(href)'
             DATE_SELECTOR = './/a/time/@datetime'
 
-            date = (post.xpath(DATE_SELECTOR).extract_first())[0:10]
             title = post.css(TITLE_SELECTOR).extract_first()
             url = post.css(URL_SELECTOR).extract_first()
+            rawdate = dateutil.parser.parse((post.xpath(DATE_SELECTOR).extract_first()))
 
-            #print out
-            print(title)
-            print(url)
-            print(date)
+            # print out post details
+            if rawdate.day == date.today().day:
+                print(title)
+                print(url)
+                print(postdate)
