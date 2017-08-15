@@ -31,10 +31,10 @@ class OnThisDaySpider(CrawlSpider):
 
             title = post.css(TITLE_SELECTOR).extract_first()
             url = post.css(URL_SELECTOR).extract_first()
-            rawdate = dateutil.parser.parse((post.xpath(DATE_SELECTOR).extract_first()))
+            date = dateutil.parser.parse((post.xpath(DATE_SELECTOR).extract_first()))
 
             # print out post details
-            if rawdate.day == date.today().day:
+            if date.day == date.today().day:
                 print(title)
                 print(url)
-                print(postdate)
+                print(date)
