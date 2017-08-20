@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import date
 
 # Define your item pipelines here
 #
@@ -8,4 +9,7 @@
 
 class BlogpostonthisdayPipeline(object):
     def process_item(self, item, spider):
-        return item
+        if item['date'].day == date.today().day:
+            print(item['title'])
+            print(item['url'])
+            print(item['date'])

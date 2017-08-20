@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 import dateutil.parser
 from datetime import date
+from collections import defaultdict
 from scrapy.spiders import CrawlSpider
 
 class OnThisDaySpider(CrawlSpider):
@@ -21,7 +23,8 @@ class OnThisDaySpider(CrawlSpider):
 
     # grab info on individual blog posts from this month's summary page
     def parse(self, response):
-        
+
+        #onthisday = defaultdict(list)
         POST_SELECTOR = '.entry-header'
         for post in response.css(POST_SELECTOR):
 
@@ -29,12 +32,20 @@ class OnThisDaySpider(CrawlSpider):
             URL_SELECTOR = 'a::attr(href)'
             DATE_SELECTOR = './/a/time/@datetime'
 
-            title = post.css(TITLE_SELECTOR).extract_first()
-            url = post.css(URL_SELECTOR).extract_first()
-            date = dateutil.parser.parse((post.xpath(DATE_SELECTOR).extract_first()))
+            #title = post.css(TITLE_SELECTOR).extract_first()
+            #url = post.css(URL_SELECTOR).extract_first()
+            #date = dateutil.parser.parse((post.xpath(DATE_SELECTOR).extract_first()))
 
-            # print out post details
-            if date.day == date.today().day:
-                print(title)
-                print(url)
-                print(date)
+            # return post details
+            #if date.day == date.today().day:
+
+            yield{
+                #onthisday[date].append([title,url])
+                'title': post.css(TITLE_SELECTOR).extract_first(),
+                'url': post.css(URL_SELECTOR).extract_first(),
+                'date': dateutil.parser.parse((post.xpath(DATE_SELECTOR).extract_first())),
+            }
+
+                #print(title)
+                #print(url)
+                #print(date)
